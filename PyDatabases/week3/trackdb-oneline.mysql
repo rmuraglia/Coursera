@@ -1,0 +1,6 @@
+-- trackdb-oneline.mysql
+drop table if exists artist;
+drop table if exists album;
+drop table if exists track;
+drop table if exists genre;
+create table artist (id int not null auto_increment, name text, primary key (id)); 
