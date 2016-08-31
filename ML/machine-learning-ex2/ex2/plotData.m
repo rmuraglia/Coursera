@@ -12,17 +12,17 @@ figure; hold on;
 %               examples and 'ko' for the negative examples.
 %
 
+% get indices for admit/noadmit groups
+in = find(y==1);
+out = find(y==0);
 
-
-
-
-
-
-
+% plot exam score scatter, by admit status
+plot(X(in, 1), X(in, 2), '+k;Admitted;');
+plot(X(out, 1), X(out, 2), 'ok;Not Admitted;', 'markerfacecolor', 'yellow');
+xlabel('Exam 1 score');
+ylabel('Exam 2 score');
 
 % =========================================================================
-
-
 
 hold off;
 

@@ -17,10 +17,27 @@ grad = zeros(size(theta));
 %               Compute the partial derivatives and set grad to the partial
 %               derivatives of the cost w.r.t. each parameter in theta
 
+%%%%%
+% version 1: no depends
+%%%%%
 
+% predictions = sigmoid(X*theta);
+% J = (1/m) * sum(-y .* log(predictions) - (1-y) .* log(1-predictions)) + lambda/(2*m) * sum(theta(2:length(theta)).^2); % don't include first element of theta in sum
+% grad_nonorm = (1/m) * sum((predictions - y) .* X, dim=1)';
+% grad_norm_factor = lambda/m .* theta(2:length(theta),:);
+% grad_norm_factor = [0; grad_norm_factor];
+% grad = grad_nonorm + grad_norm_factor;
 
+%%%%% 
+% version 2: use previous cost function output
+%%%%%
+[J, grad] = costFunction(theta, X, y);
 
+J_reg = lambda/(2*m) * sum(theta(2:length(theta)).^2);
+J = J + J_reg;
 
+grad_reg = [0; lambda/m .* theta(2:length(theta))];
+grad = grad + grad_reg;
 
 % =============================================================
 

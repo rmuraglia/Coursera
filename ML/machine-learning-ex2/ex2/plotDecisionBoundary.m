@@ -17,6 +17,8 @@ if size(X, 2) <= 3
     plot_x = [min(X(:,2))-2,  max(X(:,2))+2];
 
     % Calculate the decision boundary line
+    % decision boundary is when t(theta)*X = 0
+    % solve for x2 such that that condition is met for the plotting range of x1 values provided
     plot_y = (-1./theta(3)).*(theta(2).*plot_x + theta(1));
 
     % Plot, and adjust axes for better viewing
