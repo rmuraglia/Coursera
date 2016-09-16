@@ -20,23 +20,61 @@ y = mat_contents['y'].ravel()
 
 # load precomputed weights
 mat_contents2 = sio.loadmat('../ex3weights.mat')
-Theta1 = mat_contents2['Theta1'].T
-Theta2 = mat_contents2['Theta2'].T
-features_theta1 = Theta1[1:input_layer_size+1, :]
-intercept_theta1 = Theta1[0, :]
-features_theta2 = Theta2[1:hidden_layer_size+1, :]
-intercept_theta2 = Theta2[0, :]
+Theta1 = mat_contents2['Theta1']
+Theta2 = mat_contents2['Theta2']
+features_theta1 = Theta1.T[1:input_layer_size+1, :]
+intercept_theta1 = Theta1.T[0, :]
+features_theta2 = Theta2.T[1:hidden_layer_size+1, :]
+intercept_theta2 = Theta2.T[0, :]
+
+"""
+method 1: with sklearn library
+"""
 
 # initialize neural net
 nn = neural_network.MLPClassifier(hidden_layer_sizes=(hidden_layer_size,), activation='logistic')
-
 # give neural net the precomputed info (and everything else it needs)
 nn.fit(X, y) # fit a model
 nn.coeffs_ = [features_theta1, features_theta2] # overwrite with provided params
 nn.intercepts_ = [intercept_theta1, intercept_theta2]
-
 # predict
 predictions = nn.predict(X)
-
 # score
 pred_accuracy = nn.score(X, y)
+
+"""
+method 2: actually using the forward propagation algorithm
+"""
+
+num_examples = X.shape[0]
+num_labels = Theta2.shape[0]
+
+# goal: return a vector of length num_examples with best guess labels of each example
+
+def sigmoid(z) :
+    g = 1.0/(1+np.exp(-z))
+    return g
+
+# add ones to X
+X = np.column_stack((np.ones(num_examples), X))
+
+# calculate hidden layer sigmoid output
+a_1 = sigmoid(np.dot(X, Theta1.T))
+
+# add ones to hidden layer
+a_1 = np.column_stack((np.ones(num_examples), a_1))
+
+# get output node values
+a_2 = sigmoid(np.dot(a_1, Theta2.T))
+
+# get indices of best classification probability for each row
+best_ind = np.argmax(a_2, axis=1)
+
+# return actual labels
+labels_pred = (np.arange(10) + 1)[best_ind]
+
+# score accuracy
+np.mean(labels_pred==y)
+
+
+
